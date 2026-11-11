@@ -1,6 +1,7 @@
 """파이썬 상식 퀴즈 게임 - 메인 진입점"""
 # from quiz_data import get_default_quizzes, add_quiz, show_quiz_list   # 추가
-from quiz_data import load_quizzes, add_quiz, show_quiz_list
+# from quiz_data import load_quizzes, add_quiz, show_quiz_list
+from quiz_data import load_quizzes, add_quiz, show_quiz_list, delete_quiz  # delete_quiz 추가
 from game import play_quiz             # 추가
 
 from score import add_record, show_records, save_records, load_records
@@ -14,9 +15,9 @@ def show_menu():
     print('2. 퀴즈 추가')
     print('3. 퀴즈 목록')
     print('4. 점수 확인')
-    print('5. 종료')
+    print('5. 퀴즈 삭제')    # ← 추가
+    print('6. 종료')         # ← 5 → 6으로 변경
     print('========================================')
-
 
 def get_menu_choice():
     """메뉴 번호를 입력받아 1~5 사이 정수로 반환한다.
@@ -40,8 +41,8 @@ def get_menu_choice():
         choice = int(user_input)
 
         # 허용 범위 밖 숫자 처리 (예: 9)
-        if choice < 1 or choice > 5:
-            print('⚠️ 잘못된 입력입니다. 1-5 사이의 숫자를 입력하세요.')
+        if choice < 1 or choice > 6:
+            print('⚠️ 잘못된 입력입니다. 1-6 사이의 숫자를 입력하세요.')
             continue
 
         return choice
@@ -69,10 +70,12 @@ def main():
         elif choice == 3:
             show_quiz_list(quizzes)      # 퀴즈 목록
         elif choice == 4:
-            show_records(records)                 # 기록 조회!
+            show_records(records)
         elif choice == 5:
+            delete_quiz(quizzes)        # ← 퀴즈 삭제 추가
+        elif choice == 6:               # ← 종료를 6으로
             print('👋 게임을 종료합니다. 안녕히 가세요!')
-            break
+            break            
 
 if __name__ == '__main__':
     main()

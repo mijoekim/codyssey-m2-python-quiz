@@ -111,3 +111,39 @@ def add_quiz(quizzes):
     save_quizzes(quizzes)        # ← 추가 직후 바로 저장!
     print('✅ 퀴즈가 추가되었습니다!')
 
+def delete_quiz(quizzes):
+    """사용자가 번호를 선택해 퀴즈를 삭제한다."""
+    print()
+    print('===== 🗑️ 퀴즈 삭제 =====')
+
+    # 삭제할 퀴즈가 없으면 종료
+    if not quizzes:
+        print('⚠️ 삭제할 퀴즈가 없습니다.')
+        return
+
+    # 현재 목록 보여주기
+    for number, quiz in enumerate(quizzes, start=1):
+        print(f'{number}. {quiz.question}')
+
+    # 삭제할 번호 입력받기
+    choice = input(f'삭제할 퀴즈 번호 (1~{len(quizzes)}, 취소는 0): ').strip()
+
+    # 입력 검증
+    if not choice.isdigit():
+        print('⚠️ 숫자를 입력하세요. 삭제를 취소합니다.')
+        return
+
+    choice = int(choice)
+
+    if choice == 0:
+        print('삭제를 취소했습니다.')
+        return
+
+    if choice < 1 or choice > len(quizzes):
+        print('⚠️ 올바른 번호가 아닙니다. 삭제를 취소합니다.')
+        return
+
+    # 삭제 실행 (리스트는 0부터 시작하므로 -1)
+    removed = quizzes.pop(choice - 1)
+    save_quizzes(quizzes)   # ← 파일에 반영!
+    print(f'✅ "{removed.question}" 퀴즈를 삭제했습니다.')

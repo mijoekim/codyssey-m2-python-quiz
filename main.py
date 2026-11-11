@@ -1,6 +1,6 @@
 """파이썬 상식 퀴즈 게임 - 메인 진입점"""
-
-from quiz_data import get_default_quizzes, add_quiz, show_quiz_list   # 추가
+# from quiz_data import get_default_quizzes, add_quiz, show_quiz_list   # 추가
+from quiz_data import load_quizzes, add_quiz, show_quiz_list
 from game import play_quiz             # 추가
 
 from score import add_record, show_records, save_records, load_records
@@ -49,7 +49,7 @@ def get_menu_choice():
 
 def main():
     """프로그램의 메인 반복 루프."""
-    quizzes = get_default_quizzes()     # 기본 퀴즈 불러오기
+    quizzes = load_quizzes()     # 기본 퀴즈 불러오기
     records = load_records()            # 시작할 때 파일에서 불러오기
 
     while True:

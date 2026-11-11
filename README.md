@@ -1,128 +1,254 @@
 # 🧠 파이썬 상식 퀴즈 (CLI)
 
-파이썬 상식 문제를 풀고 점수를 기록하는 커맨드라인 퀴즈 프로그램입니다.
+## 1. 프로젝트 개요
 
-## ✨ 주요 기능
+파이썬 상식 문제를 풀고 점수를 기록하는 커맨드라인(CLI) 퀴즈 프로그램입니다.
+사용자는 퀴즈를 풀고, 직접 문제를 추가·삭제하며, 자신의 점수 기록을
+날짜별로 확인할 수 있습니다. 퀴즈와 점수는 JSON 파일에 영구 저장되어
+프로그램을 다시 실행해도 데이터가 유지됩니다.
 
+## 2. 퀴즈 주제 선정 이유
+
+파이썬을 처음 배우는 사람이 **핵심 상식을 재미있게 복습**할 수 있도록
+파이썬 기초 상식을 주제로 선정했습니다. 단순히 읽는 공부보다
+직접 문제를 풀어보면 기억에 더 오래 남고, 힌트·점수 기능을 통해
+학습 동기를 높일 수 있다고 생각했습니다.
+
+## 3. 개발 환경
+
+| 항목 | 사용 환경 |
+|---|---|
+| 프로그래밍 언어 | Python 3.10 이상 |
+| 개발 도구 | Visual Studio Code |
+| 운영 환경 | Windows / PowerShell |
+| 버전 관리 | Git |
+| 원격 저장소 | GitHub |
+| 데이터 저장 | JSON |
+| 라이브러리 | Python 표준 라이브러리 |
+
+## 4. 실행 방법
+
+### 4-1. 저장소 복제
+
+```bash
+git clone https://github.com/mijoekim/codyssey-m2-python-quiz.git
+```
+
+### 4-2. 프로젝트 폴더 이동
+
+```bash
+cd codyssey-m2-python-quiz
+```
+
+### 4-3. 프로그램 
+
+```bash
+py main.py
+```
+실행 후 메뉴 번호를 입력해 원하는 기능을 선택합니다.
+
+## 5. 기능 목록
+
+### 5-1. 기본 기능
 - 퀴즈 풀기 및 자동 채점
 - 새로운 퀴즈 추가
 - 등록된 퀴즈 목록 조회
-- 점수 기록 저장 및 조회 (JSON 파일에 영구 저장)
+- 퀴즈 삭제
+- 점수 기록 저장 및 조회
+- 프로그램 종료
 
-## 📁 파일 구성
+### 5-2. 보너스 기능
+- 🎲 **랜덤 출제**: 매번 다른 순서로 문제 출제
+- 🔢 **문제 수 선택**: 풀고 싶은 문제 개수를 직접 선택
+- 💡 **힌트 기능**: 힌트를 보면 점수가 일부 차감
+- 🗑️ **퀴즈 삭제**: 번호를 골라 퀴즈 삭제 (파일에 반영)
+- 📊 **점수 히스토리**: 날짜/시간·문제 수·점수를 영구 저장
 
-| 파일 | 설명 |
-|------|------|
-| `main.py` | 프로그램 실행 및 메뉴 관리 |
-| `quiz_model.py` | Quiz 클래스 정의 |
-| `quiz_data.py` | 기본 퀴즈 데이터, 추가/목록 기능 |
-| `scoring.py` | 퀴즈 풀이 및 채점 로직 |
-| `score.py` | 점수 기록 저장/불러오기 |
+## 6. 파일 구조
 
-## 🚀 실행 방법
 
-```bash
-python main.py
 ```
-## 🛠 개발 환경
-Python 3.x
+.
+├── main.py          # 프로그램 실행 및 메뉴 관리
+├── quiz.py          # Quiz 클래스 정의 (to_dict/from_dict 지원)
+├── quiz_data.py     # 기본 퀴즈 데이터, 추가/삭제/목록, JSON 저장·불러오기
+├── game.py          # 퀴즈 풀이 및 채점 로직 (랜덤·힌트 포함)
+├── score.py         # 점수 기록 저장/불러오기
+├── quiz_data.json   # 저장된 퀴즈 데이터
+├── scores.json      # 저장된 점수 기록
+├── docs/            # 스크린샷 등 문서 자료
+└── README.md
+```
+
+## 6. 데이터 파일 설명
+
+프로그램은 두 개의 JSON 파일에 데이터를 영구 저장합니다.
+
+### `quiz_data.json` — 퀴즈 데이터
+등록된 모든 퀴즈 문제를 저장합니다. 퀴즈를 추가·삭제하면
+이 파일에 자동으로 반영됩니다.
+
+```json
+[
+  {
+    "question": "파이썬을 만든 사람은 누구일까요?",
+    "choices": [
+      "귀도 반 로섬",
+      "제임스 고슬링",
+      "리누스 토르발스",
+      "비야네 스트롭스트룹"
+    ],
+    "answer": 1,
+    "hint": "네덜란드 출신 프로그래머입니다."
+  },
+  {
+    "question": "파이썬에서 리스트를 만들 때 사용하는 괄호는?",
+    "choices": [
+      "( )",
+      "{ }",
+      "[ ]",
+      "< >"
+    ],
+    "answer": 3,
+    "hint": "대괄호입니다."
+  },
+  {
+    "question": "다음 중 파이썬의 자료형이 아닌 것은?",
+    "choices": [
+      "int",
+      "float",
+      "char",
+      "str"
+    ],
+    "answer": 3,
+    "hint": "파이썬에는 문자 하나만을 위한 전용 타입이 없습니다."
+  },
+  {
+    "question": "파이썬에서 True와 False를 나타내는 자료형의 이름은?",
+    "choices": [
+      "boolean",
+      "bit",
+      "bool",
+      "binary"
+    ],
+    "answer": 3,
+    "hint": "4글자로 줄여서 부릅니다."
+  }
+]
+```
+
+
+### `scores.json` — 점수 기록
+퀴즈를 풀 때마다 날짜/시간, 푼 문제 수, 획득 점수가 저장되어
+히스토리로 조회할 수 있습니다.
+
+```json
+[
+  {
+    "score": 5,
+    "total": 5,
+    "date": "2026-11-11 14:04"
+  },
+  {
+    "score": 2,
+    "total": 2,
+    "date": "2026-11-11 16:42"
+  },
+  {
+    "score": 5,
+    "total": 5,
+    "date": "2026-11-11 16:43"
+  },
+  {
+    "score": 1.0,
+    "total": 2,
+    "date": "2026-11-11 17:01"
+  }
+]
+```
+
 
 ## 👤 만든 사람
+
 mijoekim
 
-## 📜 개발 기록 (Git History)
 
-### 커밋 히스토리
+## 7. Git 및 GitHub 버전 관리
 
-| # | 커밋 메시지 | 내용 |
-|---|------------|------|
-| 1 | Init: 프로젝트 초기 설정 | 레포 생성, 기본 구조 |
-| 2 | Feat: 메뉴 시스템 구현 | CLI 메뉴 출력/선택 |
-| 3 | Feat: Quiz 클래스 정의 | 퀴즈 데이터 모델 |
-| 4 | Feat: 채점 로직 구현 | 퀴즈 풀이/채점 |
-| 5 | Feat: 점수 기록 조회 | 점수 출력 |
-| 6 | Feat: 점수 JSON 저장 | scores.json 영구 저장 |
-| 7 | Feat: 퀴즈 추가/목록 기능 | 퀴즈 추가·목록 보기 |
-| 8 | Feat: 퀴즈 데이터 JSON 저장 | quiz_data.json 영구 저장 |
-| 9 | Docs: README 작성 | 문서화 |
+Git과 GitHub를 활용하여 프로젝트 소스 코드를 관리했습니다.
 
+- Git 저장소 초기화 및 원격 저장소 연결
+- 기능별 커밋을 통한 변경 이력 관리
+- 기능 개발 브랜치 생성
+- 브랜치 작업 후 기본 브랜치에 병합
+- GitHub 원격 저장소에 프로젝트 업로드
+- `git clone`을 이용한 저장소 복제
+- `git pull`을 이용한 원격 저장소 변경사항 가져오기
 
+### 7-1. 커밋 메시지 작성 규칙
 
-### 브랜치 워크플로
+커밋 메시지는 변경 목적을 쉽게 파악할 수 있도록 다음 형식을 사용합니다.
 
-```
-main
- │
- ├─ feature/play-quiz   (퀴즈 풀기 기능 개발)
- │       │
- │       └─ 작업 완료 후 main에 병합(merge)
- │
- └─ (이후 main에서 계속 개발)
+```text
+type: 변경 내용 요약
 ```
 
-- `main`: 안정 버전 브랜치
-- `feature/play-quiz`: 퀴즈 풀기 기능을 별도 브랜치에서 개발 후 병합
+주요 접두사는 다음과 같습니다.
 
-### git log 결과
+| 접두사 | 사용 목적 | 예시 |
+|---|---|---|
+| feat | 새로운 기능 추가 | feat: 퀴즈 플레이 기능 추가 |
+| fix | 오류 수정 | fix: 메뉴 입력 오류 수정 |
+| docs | 문서 수정 | docs: README 설명 보완 |
+| refactor | 코드 구조 개선 | refactor: 퀴즈 데이터 처리 개선 |
+| test | 테스트 추가 및 수정 | test: 퀴즈 입력 검증 테스트 |
+| chore | 설정 및 기타 작업 | chore: gitignore 설정 추가 |
 
+커밋 메시지는 한 커밋에서 변경한 핵심 내용을 간결하게 작성합니다.
+
+### 7-2. 커밋 기록 확인
+
+다음 명령어로 커밋 기록을 확인할 수 있습니다.
+
+```bash
+git log --oneline
+```
 ![alt text](docs/screenshots/git-log-oneline.png)
+
+전체 커밋 수를 확인하려면 다음 명령어를 사용합니다.
+
+```bash
+git rev-list --count HEAD
+```
+![alt text](docs/screenshots/git-rev-list.png)
+
+
+
+
+### 7-3. 브랜치 및 병합 기록 확인
+
+브랜치 목록 확인:
+
+```bash
+git branch -a
+```
+![alt text](docs/screenshots/git-rev-list.png)
+
+
+브랜치 병합을 포함한 전체 커밋 그래프 확인:
+
+```bash
+git log --oneline --graph --decorate --all
+```
 ![alt text](docs/screenshots/git-log--graph--all.png)
 
-```
-User@4F-92 UCRT64 /c/mijoek/codyssey-m2-python-quiz (main)
-$ git log --graph --all
-* commit 2c883ae7fd5a12b8488a8e71ae2a90e5c95b1a3f (HEAD -> main, origin/main, origin/HEAD)
-| Author: mijoekim <mijoekkim@gmail.com>
-| Date:   Wed Nov 11 15:01:36 2026 +0900
-|
-|     Feat: 퀴즈 데이터 JSON 파일 영구 저장
-|
-* commit a9796d228af2b3e93efaad70cf16b1f2ecd0546e
-| Author: mijoekim <mijoekkim@gmail.com>
-| Date:   Wed Nov 11 14:32:18 2026 +0900
-|
-|     Feat: 퀴즈 추가 및 목록 보기 기능 구현
-|
-* commit 6c8ba281fc2c3376d92ec8cbcf28c6328e8c8d24
-| Author: mijoekim <mijoekkim@gmail.com>
-| Date:   Wed Nov 11 14:11:27 2026 +0900
-|
-|     Feat: 점수 JSON 파일 저장 및 불러오기 구현
-|
-* commit 10664a6a68ff273c6030b1c50299b39975ac9798
-| Author: mijoekim <mijoekkim@gmail.com>
-| Date:   Wed Nov 11 13:55:28 2026 +0900
-|
-|     Feat: 점수 기록 및 확인 기능 구현
-|
-* commit 9618f52dd8ba1746be31521d2f7ddea8312c8c68 (feature/play-quiz)
-| Author: mijoekim <mijoekkim@gmail.com>
-| Date:   Wed Nov 11 13:34:22 2026 +0900
-|
-|     Feat: 퀴즈 풀기 및 채점 기능 구현
-|
-* commit cb03ca0a339027996754d162cdbf1bb3c32ad1d7
-| Author: mijoekim <mijoekkim@gmail.com>
-| Date:   Wed Nov 11 13:23:49 2026 +0900
-|
-|     Feat: 기본 파이썬 상식 퀴즈 5개 데이터 추가
-|
-* commit 691104884d73a7be916fdc930bfc9efb5f8fe2f4
-| Author: mijoekim <mijoekkim@gmail.com>
-| Date:   Wed Nov 11 13:15:52 2026 +0900
-|
-|     Feat: 개별 퀴즈를 표현하는 Quiz 클래스 구현
-|
-* commit 6279a720f2ec98ed9a0e31ae25d9c55ad0466240
-| Author: mijoekim <mijoekkim@gmail.com>
-| Date:   Wed Nov 11 13:05:11 2026 +0900
-|
-|     Feat: 메뉴 출력 및 입력 검증 기능 구현
-|
-* commit 2c80d0ef11ff57e8dbf98a98db9ab6ea5e65ab04
-  Author: mijoekim <mijoekkim@gmail.com>
-  Date:   Wed Nov 11 12:52:44 2026 +0900
 
-      Initial commit
+실제 브랜치 생성과 병합을 통해 기능 개발 이력을 관리했습니다.
 
-```
+
+
+### 7-4. GitHub 저장소
+
+GitHub 저장소:
+
+https://github.com/mijoekim/codyssey-m2-python-quiz

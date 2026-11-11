@@ -78,4 +78,10 @@ def main():
             break            
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, EOFError):
+        # Ctrl+C 또는 입력 종료(EOF) 시 깔끔하게 종료
+        print('\n👋 프로그램을 종료합니다.')
+
+

@@ -80,7 +80,7 @@ py main.py
 └── README.md
 ```
 
-## 6. 데이터 파일 설명
+## 6.1 데이터 파일 설명
 
 프로그램은 두 개의 JSON 파일에 데이터를 영구 저장합니다.
 
@@ -220,10 +220,14 @@ git log --oneline
 ```bash
 git rev-list --count HEAD
 ```
+
+```
+User@4F-92 UCRT64 /c/mijoek/codyssey-m2-python-quiz (main)
+$ git rev-list --count HEAD
+15
+
+```
 ![alt text](docs/screenshots/git-rev-list.png)
-
-
-
 
 ### 7-3. 브랜치 및 병합 기록 확인
 
@@ -232,7 +236,7 @@ git rev-list --count HEAD
 ```bash
 git branch -a
 ```
-![alt text](docs/screenshots/git-rev-list.png)
+![alt text](docs/screenshots/git-branch-a.png)
 
 
 브랜치 병합을 포함한 전체 커밋 그래프 확인:
@@ -252,3 +256,50 @@ git log --oneline --graph --decorate --all
 GitHub 저장소:
 
 https://github.com/mijoekim/codyssey-m2-python-quiz
+
+
+## 8. 기술 선택 이유
+
+### 8-1. 왜 클래스(OOP)를 사용했나? (Quiz 클래스)
+퀴즈 한 개는 '질문 + 선택지 + 정답 + 힌트'가 항상 함께 다녀야 하는
+데이터 묶음입니다. 이를 딕셔너리로 다루면 키 오타·구조 불일치가 생기기 쉽습니다.
+`Quiz` 클래스로 묶으면 다음 이점이 있습니다.
+
+- 관련 데이터와 동작(`show`, `is_correct`)을 한 곳에 모을 수 있음
+- `to_dict`/`from_dict`로 저장·복원 규칙을 클래스가 직접 관리
+- 새 속성(예: 난이도) 추가 시 한 클래스만 수정하면 됨
+
+### 8-2. 왜 JSON으로 저장했나?
+- **가독성**: 사람이 직접 열어 읽고 수정할 수 있는 텍스트 형식
+- **구조화**: 선택지 리스트처럼 중첩 구조를 그대로 표현 가능
+- **표준 라이브러리**: 추가 설치 없이 `json` 모듈로 처리 가능
+- 퀴즈·점수처럼 규모가 작고 구조가 단순한 데이터에 적합
+
+### 8-3. 파일(로직) 분리 기준
+| 책임 | 담당 파일 |
+|------|----------|
+| 화면 흐름·메뉴 제어 | `main.py` |
+| 데이터 모델 | `quiz.py` |
+| 퀴즈 데이터 입출력·관리 | `quiz_data.py` |
+| 퀴즈 진행·채점 | `game.py` |
+| 점수 입출력·관리 | `score.py` |
+
+입력 흐름(`main.py`)과 데이터 입출력(`quiz_data.py`, `score.py`)을
+분리하여, 저장 방식이 바뀌어도 메뉴 코드는 영향을 받지 않도록 했습니다.
+
+## 9. 데이터 저장 방식의 한계와 대응
+
+### 9-1. JSON 저장의 한계
+- 저장할 때마다 **파일 전체를 다시 쓰므로**, 데이터가 매우 많아지면
+  속도·메모리 면에서 비효율적입니다.
+- 동시에 여러 곳에서 쓰면 데이터가 꼬일 수 있습니다.
+- 대규모·동시접근이 필요하다면 **SQLite 같은 데이터베이스**가 더 적합합니다.
+  (현재 프로젝트는 소규모 CLI이므로 JSON으로 충분합니다.)
+
+### 9-2. 파일 손상 시 대응
+현재는 파일이 **없을 때**(`FileNotFoundError`)만 처리하여,
+퀴즈 파일은 기본 데이터로 복구하고 점수 파일은 빈 기록으로 시작합니다.
+
+JSON **내용이 손상된 경우**(파싱 오류)에 대한 개선 방향:
+- 읽기 시 `json.JSONDecodeError`도 함께 처리
+- 손상 파일을 `.bak`으로 백업한 뒤 초기값으로 재시작

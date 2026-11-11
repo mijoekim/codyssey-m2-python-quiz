@@ -3,8 +3,7 @@
 from data import get_default_quizzes   # 추가
 from game import play_quiz             # 추가
 
-from score import add_record, show_records   # 추가
-
+from score import add_record, show_records, save_records, load_records
 def show_menu():
     """메뉴를 화면에 출력한다."""
     print()
@@ -51,7 +50,7 @@ def get_menu_choice():
 def main():
     """프로그램의 메인 반복 루프."""
     quizzes = get_default_quizzes()     # 기본 퀴즈 불러오기
-    records = []                       # 점수 기록 리스트 추가
+    records = load_records()            # 시작할 때 파일에서 불러오기
 
     while True:
         show_menu()
@@ -59,7 +58,8 @@ def main():
 
         if choice == 1:
             score = play_quiz(quizzes)            # 점수 받아오기
-            add_record(records, score, len(quizzes))  # 기록 저장!
+            add_record(records, score, len(quizzes))  
+            save_records(records)      # 기록 추가 후 바로 저장!
         elif choice == 2:
             print('👉 (아직 준비 중) 퀴즈 추가')
         elif choice == 3:

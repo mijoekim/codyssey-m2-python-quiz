@@ -4,37 +4,33 @@ import json
 QUIZ_FILE = 'quiz_data.json'   # 퀴즈를 저장할 파일
 
 from quiz import Quiz
-def quiz_to_dict(quiz):
-    """Quiz 객체를 저장 가능한 딕셔너리로 변환한다."""
-    return {
-        'question': quiz.question,
-        'choices': quiz.choices,
-        'answer': quiz.answer,
-    }
+# def quiz_to_dict(quiz):
+#     """Quiz 객체를 저장 가능한 딕셔너리로 변환한다."""
+#     return {
+#         'question': quiz.question,
+#         'choices': quiz.choices,
+#         'answer': quiz.answer,
+#     }
 
 
-def dict_to_quiz(data):
-    """딕셔너리를 Quiz 객체로 복원한다."""
-    return Quiz(data['question'], data['choices'], data['answer'])
+# def dict_to_quiz(data):
+#     """딕셔너리를 Quiz 객체로 복원한다."""
+#     return Quiz(data['question'], data['choices'], data['answer'])
 
 def save_quizzes(quizzes):
     """퀴즈 리스트를 JSON 파일로 저장한다."""
-    data = [quiz_to_dict(q) for q in quizzes]   # 객체 → 딕셔너리 리스트
+    data = [q.to_dict() for q in quizzes]   # Quiz의 to_dict 사용 (hint 포함!)
     with open(QUIZ_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
 def load_quizzes():
-    """JSON 파일에서 퀴즈를 불러온다.
-
-    파일이 없으면 기본 퀴즈를 저장한 뒤 반환한다.
-    """
+    """JSON 파일에서 퀴즈를 불러온다."""
     try:
         with open(QUIZ_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
-        return [dict_to_quiz(d) for d in data]   # 딕셔너리 → 객체 리스트
+        return [Quiz.from_dict(d) for d in data]   # Quiz의 from_dict 사용
     except FileNotFoundError:
-        # 처음 실행: 기본 퀴즈로 파일을 만들어 준다
         quizzes = get_default_quizzes()
         save_quizzes(quizzes)
         return quizzes

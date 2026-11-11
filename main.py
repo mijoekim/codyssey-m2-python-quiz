@@ -1,6 +1,6 @@
 """파이썬 상식 퀴즈 게임 - 메인 진입점"""
 
-from data import get_default_quizzes   # 추가
+from quiz_data import get_default_quizzes, add_quiz, show_quiz_list   # 추가
 from game import play_quiz             # 추가
 
 from score import add_record, show_records, save_records, load_records
@@ -61,9 +61,9 @@ def main():
             add_record(records, score, len(quizzes))  
             save_records(records)      # 기록 추가 후 바로 저장!
         elif choice == 2:
-            print('👉 (아직 준비 중) 퀴즈 추가')
+            add_quiz(quizzes)            # 퀴즈 추가
         elif choice == 3:
-            print('👉 (아직 준비 중) 퀴즈 목록')
+            show_quiz_list(quizzes)      # 퀴즈 목록
         elif choice == 4:
             show_records(records)                 # 기록 조회!
         elif choice == 5:

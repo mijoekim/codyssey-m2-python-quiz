@@ -1,5 +1,5 @@
 """퀴즈 풀기(진행 + 채점) 기능."""
-
+import random   # ← 맨 위에 추가
 
 def ask_one_quiz(quiz):
     """퀴즈 1개를 출제하고 사용자의 답을 입력받아 정답 여부를 반환한다.
@@ -35,32 +35,44 @@ def ask_one_quiz(quiz):
 
 
 def play_quiz(quizzes):
-    """전체 퀴즈를 순서대로 진행하고 최종 점수를 반환한다.
-
-    매개변수:
-        quizzes (list): Quiz 객체들의 리스트
-    반환값: 맞힌 개수(int)
-    """
+    """전체 퀴즈를 진행하고 (맞힌 개수, 푼 문제 수)를 반환한다."""
     if not quizzes:
         print('⚠️ 풀 수 있는 퀴즈가 없습니다.')
-        return 0
+        return 0, 0   # ← 점수, 푼 문제 수 둘 다 반환
+
+    # 5.1 랜덤 출제: 원본 보호를 위해 복사 후 섞기
+    quiz_list = quizzes.copy()
+    random.shuffle(quiz_list)
+
+    # 5.2 문제 수 선택
+    max_count = len(quiz_list)
+    print()
+    print(f'총 {max_count}개의 문제가 있습니다.')
+    count_input = input(f'몇 문제를 푸시겠습니까? (1~{max_count}): ').strip()
+
+    if count_input.isdigit() and 1 <= int(count_input) <= max_count:
+        count = int(count_input)
+    else:
+        print('⚠️ 올바른 숫자가 아니므로 전체 문제를 출제합니다.')
+        count = max_count
+
+    quiz_list = quiz_list[:count]   # 앞에서 count개만 선택
 
     score = 0
-    total = len(quizzes)
+    total = len(quiz_list)
 
     print()
     print(f'총 {total}문제를 풉니다. 시작합니다!')
 
-    for number, quiz in enumerate(quizzes, start=1):
+    for number, quiz in enumerate(quiz_list, start=1):
         print()
         print(f'--- {number}번 문제 ---')
         if ask_one_quiz(quiz):
             score += 1
 
-    # 최종 결과 출력
     print()
     print('========================================')
     print(f'🎯 결과: 총 {total}문제 중 {score}개 정답!')
     print('========================================')
 
-    return score
+    return score, total   # ← 점수와 푼 문제 수 반환

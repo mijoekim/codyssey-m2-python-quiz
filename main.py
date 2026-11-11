@@ -57,9 +57,13 @@ def main():
         choice = get_menu_choice()
 
         if choice == 1:
-            score = play_quiz(quizzes)            # 점수 받아오기
-            add_record(records, score, len(quizzes))  
-            save_records(records)      # 기록 추가 후 바로 저장!
+            score, total = play_quiz(quizzes)       # ← 두 값 받기
+            add_record(records, score, total)       # ← 실제 푼 문제 수 전달
+            save_records(records)
+
+            # score = play_quiz(quizzes)            # 점수 받아오기
+            # add_record(records, score, len(quizzes))  
+            # save_records(records)      # 기록 추가 후 바로 저장!
         elif choice == 2:
             add_quiz(quizzes)            # 퀴즈 추가
         elif choice == 3:

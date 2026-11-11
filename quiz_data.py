@@ -1,5 +1,6 @@
 """기본 제공 파이썬 상식 퀴즈 데이터."""
 import json
+import os
 
 QUIZ_FILE = 'quiz_data.json'   # 퀴즈를 저장할 파일
 
@@ -23,17 +24,48 @@ def save_quizzes(quizzes):
     with open(QUIZ_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-
 def load_quizzes():
-    """JSON 파일에서 퀴즈를 불러온다."""
+    """JSON 파일에서 퀴즈를 불러온다.
+    
+    - 파일 없음      → 기본 퀴즈 저장 후 반환
+    - 파일 손상      → .bak 백업 후 기본 퀴즈 저장 후 반환
+    """
     try:
         with open(QUIZ_FILE, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        return [Quiz.from_dict(d) for d in data]   # Quiz의 from_dict 사용
+            data = json.load(f)              # ← JSONDecodeError 가능
+        return [Quiz.from_dict(d) for d in data]  # ← KeyError, TypeError 가능
+
     except FileNotFoundError:
+        # 파일이 없을 때 (최초 실행)
         quizzes = get_default_quizzes()
-        save_quizzes(quizzes)
+        save_quizzes(quizzes)               # 기본 퀴즈를 파일로 저장
         return quizzes
+
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        # 파일이 손상됐을 때
+        print(f'⚠️  퀴즈 파일이 손상되어 기본 퀴즈로 복구합니다. (원인: {e})')
+        _backup_corrupted_file(QUIZ_FILE)   # 손상 파일 백업
+        quizzes = get_default_quizzes()
+        save_quizzes(quizzes)               # 깨끗한 파일로 덮어쓰기
+        return quizzes
+
+def _backup_corrupted_file(filepath):
+    """손상된 파일을 .bak으로 백업한다."""
+    
+    if os.path.exists(filepath):
+        backup_path = filepath + '.bak'
+        os.replace(filepath, backup_path)   # 삭제 대신 이동 (원인 분석용)
+        print(f'   💾 손상 파일 백업: {backup_path}')
+# def load_quizzes():
+#     """JSON 파일에서 퀴즈를 불러온다."""
+#     try:
+#         with open(QUIZ_FILE, 'r', encoding='utf-8') as f:
+#             data = json.load(f)
+#         return [Quiz.from_dict(d) for d in data]   # Quiz의 from_dict 사용
+#     except FileNotFoundError:
+#         quizzes = get_default_quizzes()
+#         save_quizzes(quizzes)
+#         return quizzes
 
 
 

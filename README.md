@@ -303,3 +303,5 @@ https://github.com/mijoekim/codyssey-m2-python-quiz
 JSON **내용이 손상된 경우**(파싱 오류)에 대한 개선 방향:
 - 읽기 시 `json.JSONDecodeError`도 함께 처리
 - 손상 파일을 `.bak`으로 백업한 뒤 초기값으로 재시작
+
+![alt text](docs/screenshots/json-error.png)

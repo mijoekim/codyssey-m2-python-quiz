@@ -2,18 +2,30 @@
 import random   # ← 맨 위에 추가
 
 def ask_one_quiz(quiz):
-    """퀴즈 1개를 출제하고 사용자의 답을 입력받아 정답 여부를 반환한다.
+    """퀴즈 1개를 출제하고, 이 문제에서 획득한 점수를 반환한다.
 
-    반환값: True(정답) 또는 False(오답)
+    반환값(float): 정답+힌트X=1.0, 정답+힌트O=0.5, 오답=0.0
     """
     quiz.show()  # 문제와 선택지 출력
 
-    # 1~4 사이 올바른 번호가 들어올 때까지 반복
+    used_hint = False   # 힌트 사용 여부 기록
+
     while True:
-        user_input = input('정답 번호를 입력하세요 (1-4): ').strip()
+        user_input = input("정답 번호 입력 (1-4), 힌트는 'h': ").strip().lower()
+
+        # 힌트 요청 처리
+        if user_input == 'h':
+            if used_hint:
+                print('💡 이미 힌트를 사용했습니다.')
+            elif quiz.hint:
+                print(f'💡 힌트: {quiz.hint} (점수 0.5 차감)')
+                used_hint = True
+            else:
+                print('⚠️ 이 문제에는 힌트가 없습니다.')
+            continue   # 힌트만 보고 다시 입력받기
 
         if not user_input.isdigit():
-            print('⚠️ 숫자만 입력하세요.')
+            print("⚠️ 숫자 또는 'h'를 입력하세요.")
             continue
 
         user_answer = int(user_input)
@@ -22,17 +34,19 @@ def ask_one_quiz(quiz):
             print('⚠️ 1-4 사이의 숫자를 입력하세요.')
             continue
 
-        # 올바른 입력이면 반복 종료
         break
 
-    # Quiz 클래스의 is_correct 메서드로 채점
+    # 채점 + 점수 계산
     if quiz.is_correct(user_answer):
-        print('✅ 정답입니다!')
-        return True
+        if used_hint:
+            print('✅ 정답입니다! (힌트 사용으로 0.5점)')
+            return 0.5
+        else:
+            print('✅ 정답입니다!')
+            return 1.0
     else:
         print(f'❌ 틀렸습니다. 정답은 {quiz.answer}번입니다.')
-        return False
-
+        return 0.0
 
 def play_quiz(quizzes):
     """전체 퀴즈를 진행하고 (맞힌 개수, 푼 문제 수)를 반환한다."""
@@ -63,16 +77,21 @@ def play_quiz(quizzes):
 
     print()
     print(f'총 {total}문제를 풉니다. 시작합니다!')
+    print("💡 힌트를 보려면 'h'를 입력하세요. (0.5점 차감)")
 
     for number, quiz in enumerate(quiz_list, start=1):
         print()
         print(f'--- {number}번 문제 ---')
-        if ask_one_quiz(quiz):
-            score += 1
+        score += ask_one_quiz(quiz)   # ← 반환된 점수(0/0.5/1)를 누적
+    # for number, quiz in enumerate(quiz_list, start=1):
+    #     print()
+    #     print(f'--- {number}번 문제 ---')
+    #     if ask_one_quiz(quiz):
+    #         score += 1
 
     print()
     print('========================================')
-    print(f'🎯 결과: 총 {total}문제 중 {score}개 정답!')
+    print(f'🎯 결과: 총 {total}문제 중 {score}점 획득!')
     print('========================================')
 
     return score, total   # ← 점수와 푼 문제 수 반환

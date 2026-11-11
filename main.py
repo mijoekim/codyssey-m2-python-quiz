@@ -1,5 +1,7 @@
 """파이썬 상식 퀴즈 게임 - 메인 진입점"""
 
+from data import get_default_quizzes   # 추가
+from game import play_quiz             # 추가
 
 def show_menu():
     """메뉴를 화면에 출력한다."""
@@ -46,12 +48,14 @@ def get_menu_choice():
 
 def main():
     """프로그램의 메인 반복 루프."""
+    quizzes = get_default_quizzes()   # 기본 퀴즈 불러오기
+
     while True:
         show_menu()
         choice = get_menu_choice()
 
         if choice == 1:
-            print('👉 (아직 준비 중) 퀴즈 풀기')
+            play_quiz(quizzes)         # 퀴즈 풀기 연결!
         elif choice == 2:
             print('👉 (아직 준비 중) 퀴즈 추가')
         elif choice == 3:
@@ -61,7 +65,6 @@ def main():
         elif choice == 5:
             print('👋 게임을 종료합니다. 안녕히 가세요!')
             break
-
 
 if __name__ == '__main__':
     main()
